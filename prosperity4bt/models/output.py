@@ -99,8 +99,8 @@ class TradeRow:
             "buyer": self.trade.buyer,
             "seller": self.trade.seller,
             "symbol": self.trade.symbol,
-            "currency": "XIREC",
-            "price": self.trade.price,
+            "currency": "XIRECS",
+            "price": float(self.trade.price),
             "quantity": self.trade.quantity,
         }
 
@@ -113,7 +113,7 @@ class TradeRow:
     "buyer": "{self.trade.buyer}",
     "seller": "{self.trade.seller}",
     "symbol": "{self.trade.symbol}",
-    "currency": "XIREC",
+    "currency": "XIRECS",
     "price": {self.trade.price},
     "quantity": {self.trade.quantity},
   }}

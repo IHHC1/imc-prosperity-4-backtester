@@ -8,7 +8,6 @@ from prosperity4bt.datamodel import Trade, Symbol
 from prosperity4bt.models.input import PriceRow, ObservationRow, BacktestData
 
 
-
 class BackDataReader:
 
     def read_from_file(self, round_num: int, day_num: int) -> BacktestData:
@@ -16,15 +15,17 @@ class BackDataReader:
         trades = self.__get_trades(round_num, day_num)
         observations = self.__get_observations(round_num, day_num)
 
+        products = []
         prices_by_timestamp: dict[int, dict[Symbol, PriceRow]] = defaultdict(dict)
         for row in prices:
             prices_by_timestamp[row.timestamp][row.product] = row
+            if row.product not in products:
+                products.append(row.product)
 
         trades_by_timestamp: dict[int, dict[Symbol, list[Trade]]] = defaultdict(lambda: defaultdict(list))
         for trade in trades:
             trades_by_timestamp[trade.timestamp][trade.symbol].append(trade)
 
-        products = sorted(set(row.product for row in prices))
         profit_loss = {product: 0.0 for product in products}
 
         observations_by_timestamp = {row.timestamp: row for row in observations}

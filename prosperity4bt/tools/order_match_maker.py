@@ -32,11 +32,14 @@ class OrderMatchMaker:
 
         # adjust market trades as market trades might have been used to fill the orders
         for product, trades in market_trades.items():
+            trades_updated = False
             for trade in trades:
-                trade.trade.quantity = min(trade.buy_quantity, trade.sell_quantity)
+                if trade.buy_quantity != trade.sell_quantity:
+                    trades_updated = True
+                    trade.trade.quantity = min(trade.buy_quantity, trade.sell_quantity)
 
-            remaining_market_trades = [t.trade for t in trades if t.trade.quantity > 0]
-
+            # remaining_market_trades = [t.trade for t in trades if t.trade.quantity > 0]
+            remaining_market_trades = [t.trade for t in trades if t.trade.quantity > 0 and t.buy_quantity == t.sell_quantity]
             self.state.market_trades[product] = remaining_market_trades
             # TODO: why adding remaining_market_trades into result?
             result.extend([TradeRow(trade) for trade in remaining_market_trades])

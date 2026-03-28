@@ -78,10 +78,9 @@ class TestRunner:
 
 
     def __initialize_trade_state(self, state: TradingState, data: BacktestData, timestamp: int) -> TradingState:
-
         state.timestamp = timestamp
-
-        for product in data.products:
+        state.listings = {product: Listing(product, product, 1) for product in data.products}
+        for product in sorted(data.products):
             order_depth = OrderDepth()
             row = data.prices[state.timestamp][product]
 
@@ -92,7 +91,6 @@ class TestRunner:
                 order_depth.sell_orders[price] = -volume
 
             state.order_depths[product] = order_depth
-            state.listings[product] = Listing(product, product, 1)
 
         observation_row = data.observations.get(state.timestamp)
         if observation_row is None:
